@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Character.Combat.Spells;
 using Character.Combat.Spells.Config;
 using UnityEngine;
@@ -11,18 +10,12 @@ namespace UI
         [SerializeField] private SpellElement template;
         [SerializeField] private Transform root;
 
-        private Dictionary<ESpell, SpellElement> _elements;
-
+        private readonly Dictionary<ESpell, SpellElement> _elements = new();
+        
         private SpellBook _spellBook;
-
         private SpellElement _selected;
 
-        private void Awake()
-        {
-            _elements = new();
-        }
-
-        private void OnDestroy()
+        private void OnDisable()
         {
             Clear();
         }
@@ -47,9 +40,10 @@ namespace UI
             {
                 _spellBook.OnSpellSelected -= SpellSelected;
             }
-            foreach (var (type, element) in _elements)
+
+            foreach (var element in _elements)
             {
-                Destroy(element.gameObject);
+                Destroy(element.Value.gameObject);
             }
             _elements.Clear();
         }

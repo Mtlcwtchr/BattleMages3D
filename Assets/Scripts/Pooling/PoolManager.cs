@@ -15,9 +15,9 @@ namespace Pooling
             base.Awake();
             
             _pools = new Dictionary<EPool, Pool>();
-            for (var i = 0; i < pools.Count; i++)
+            foreach (var pool in pools)
             {
-                _pools.Add(pools[i].PoolType, pools[i]);
+                _pools.Add(pool.PoolType, pool);
             }
         }
 

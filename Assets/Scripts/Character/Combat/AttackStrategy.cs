@@ -10,12 +10,19 @@ namespace Character.Combat
         [SerializeField] protected float effectiveRange;
         [SerializeField] private float attackCooldown;
         [SerializeField] private float attackAngle;
+        
+        protected bool AttackInProgress;
 
         private float _effectiveRangeSq;
-        public float EffectiveRange => effectiveRange;
-        public float EffectiveRangeSq => _effectiveRangeSq;
-
+        
         private float _nextAttackTime;
+        
+        public void Init(CharacterModel model)
+        {
+            InitInternal(model);
+        }
+
+        protected abstract void InitInternal(CharacterModel model);
 
         protected virtual void Awake()
         {
@@ -43,14 +50,23 @@ namespace Character.Combat
             animationController.Attack();
         }
 
-        public bool InAttackRange(Vector3 position, Vector3 targetPosition) => (position - targetPosition).sqrMagnitude <= EffectiveRangeSq;
+        public bool InAttackRange(Vector3 position, Vector3 targetPosition) => (position - targetPosition).sqrMagnitude <= _effectiveRangeSq;
 
         public bool InAttackSector(Quaternion rotation, Quaternion lookRotation) => Quaternion.Angle(rotation, lookRotation) <= attackAngle;
 
-        protected abstract void AttackFinish();
+        protected virtual void AttackFinish()
+        {
+            AttackInProgress = false;
+        }
 
-        protected abstract void AttackStart();
+        protected virtual void AttackStart()
+        {
+            AttackInProgress = true;
+        }
 
-        protected abstract bool CanAttack();
+        protected virtual bool CanAttack()
+        {
+            return !AttackInProgress;
+        }
     }
 }

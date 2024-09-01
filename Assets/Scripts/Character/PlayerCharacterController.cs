@@ -8,31 +8,30 @@ namespace Character
     {
         [SerializeField] private UnityEngine.Camera followUpCamera;
 
-        public override Vector3 AttackDir => _selectionDir;
-
         private Vector2 _inputVector;
 
-        private Vector3 _selectionPosition;
-        private Vector3 _selectionNormal;
         private Vector3 _selectionDir;
 
-        public Vector3 SelectionPosition => _selectionPosition;
+        public Vector3 SelectionPosition { get; private set; }
 
-        public Vector3 SelectionNormal => _selectionNormal;
-        
+        public Vector3 SelectionNormal { get; private set; }
+
         public bool SelectionVisible { get; private set; }
 
         protected override void Awake()
         {
+            base.Awake();
+            
             _selectionDir = transform.forward;
-            OnDead += Dead;
         }
 
-        private void FixedUpdate()
+        protected override void FixedUpdate()
         {
             UpdateSelection();
             UpdateRotation();
             UpdateMove();
+            
+            base.FixedUpdate();
         }
 
         private void UpdateMove()
@@ -52,9 +51,9 @@ namespace Character
             {
                 SelectionVisible = true;
                 var hitPos = hit.point;
-                _selectionPosition = hitPos;
-                _selectionNormal = hit.normal;
-                var dir = hitPos - Position;
+                SelectionPosition = hitPos;
+                SelectionNormal = hit.normal;
+                var dir = hitPos - Model.Position;
                 dir.Normalize();
                 _selectionDir = dir;
             }
@@ -89,7 +88,7 @@ namespace Character
         {
             if(inputContext.performed)
             {
-                Entity.SpellBook.SelectNext();
+                Model.SpellBook.SelectNext();
             }
         }
 
@@ -97,13 +96,12 @@ namespace Character
         {
             if(inputContext.performed)
             {
-                Entity.SpellBook.SelectPrevious();
+                Model.SpellBook.SelectPrevious();
             }
         }
 
-        private void Dead()
-        {
-            
-        }
+        protected override void Die() { }
+
+        protected override Vector3 GetAttackTarget() => _selectionDir;
     }
 }

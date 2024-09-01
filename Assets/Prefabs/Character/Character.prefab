@@ -84,10 +84,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementController: {fileID: 6186542621181909200}
-  animationController: {fileID: 2996931626689779752}
   attackStrategy: {fileID: 6500464322199533779}
   rotationController: {fileID: 3312284512829557507}
-  entityConfig: {fileID: 11400000, guid: ba1eee9793e227d498cbb88c087b358c, type: 2}
+  hud: {fileID: 0}
   spellCastRoot: {fileID: 2616214901612092079}
   followUpCamera: {fileID: 0}
 --- !u!114 &6186542621181909200
@@ -102,10 +101,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 262e1b20dcb641ccbe72a49f695af63e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 5
-  strafeSpeed: 4
+  strafeFactor: 0.7
   movementSmoothTime: 0.5
   stopSmoothTime: 0.2
+  maxMoveAngle: 0
   rb: {fileID: 6377534744850166670}
 --- !u!114 &6500464322199533779
 MonoBehaviour:

@@ -1,101 +1,66 @@
 ﻿using System;
-using Character.Animation;
 using Character.Combat;
-using Character.Entity;
 using UI;
 using UnityEngine;
 
 namespace Character
 {
-    public class CharacterController : MonoBehaviour, IDamageable
+    public abstract class CharacterController : MonoBehaviour, IDamageable
     {
         public event Action OnAttackRequested;
 
-        public event Action<float> OnHpChanged;
-        public event Action OnDead;
-
         [SerializeField] protected MovementController movementController;
-        [SerializeField] protected CharacterAnimationController animationController;
         [SerializeField] protected AttackStrategy attackStrategy;
         [SerializeField] protected RotationController rotationController;
-
-        [SerializeField] private EntityConfig entityConfig;
-        [SerializeField] private Transform spellCastRoot;
         [SerializeField] private CharacterHud hud;
+        [SerializeField] private Transform spellCastRoot;
         
-        public bool IsVisible { get; set; }
-
-        public Entity.Entity Entity { get; private set; }
-
-        public Transform SpellCastRoot => spellCastRoot;
-
-        public virtual Vector3 AttackDir => transform.forward;
+        public ViewRootsData RootsData { get; private set; }
         
-        public Vector3 Position => movementController.Position;
+        public CharacterModel Model { get; private set; }
 
-        public Vector2 InputNormalized => movementController.ConsumedInput * movementController.SpeedNormalized;
-
-        public float SpeedNormalized => movementController.SpeedNormalized;
-
-        public void Init()
+        protected virtual void Awake()
         {
-            Clear();
-            Entity = new Entity.Entity(entityConfig);
-            IsVisible = true;
-            if (attackStrategy is MagicAttackStrategy magicAttackStrategy)
-            {
-                magicAttackStrategy.SetupSpellBook(Entity.SpellBook);
-            }
-
-            if (attackStrategy is MeleeAttackStrategy meleeAttackStrategy)
-            {
-                meleeAttackStrategy.Damage = entityConfig.attackDamage;
-            }
-            
-            movementController.SetSpeed(Entity.MovementSpeed);
-            
-            if (hud != null)
-            {
-                hud.Init(this);
-            }
-            
-            Entity.OnHpChanged += HpChanged;
+            RootsData = new ViewRootsData(transform, spellCastRoot);
         }
 
-        private void Clear()
+        protected virtual void FixedUpdate()
         {
-            if (Entity != null)
-            {
-                Entity.OnHpChanged -= HpChanged;
-            }
+            Model.SetViewData(GetPosition(), GetAbsoluteDir(), GetAttackTarget(), GetSpeedNormalized());
         }
 
-        protected virtual void Awake() { }
+        public void Init(CharacterModel model)
+        {
+            Model = model;
+            Model.Init(this);
+            ListenModel(Model);
+
+            attackStrategy.Init(Model);
+            movementController.SetSpeed(Model.Data.MovementSpeed);
+            
+            hud?.Init(Model);
+        }
+
+        private void ListenModel(CharacterModel model)
+        {
+            model.OnCharacterDied += Die;
+        }
 
         protected void AttackRequested()
         {
             OnAttackRequested?.Invoke();
         }
 
-        private void HpChanged(float obj)
-        {
-            OnHpChanged?.Invoke(obj);
-        }
-
         public void Damage(float value)
         {
-            var damageReduced = value / Entity.Armor;
-            Entity.Hp -= damageReduced;
-
-            if (Mathf.Approximately(Entity.Hp, 0))
-            {
-                Die();
-            }
+            Model.DamageReceiver.Damage(value);
         }
 
-        private void Die()
-        {
-            OnDead?.Invoke();
-        }
+        protected abstract void Die();
+
+        protected virtual Vector3 GetPosition() => transform.position;
+        protected virtual Vector2 GetAbsoluteDir() => movementController.ConsumedInput;
+        protected virtual float GetSpeedNormalized() => movementController.SpeedNormalized;
+        protected abstract Vector3 GetAttackTarget();
     }
 }

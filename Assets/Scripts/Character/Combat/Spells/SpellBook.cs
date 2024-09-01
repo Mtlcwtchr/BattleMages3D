@@ -7,36 +7,32 @@ namespace Character.Combat.Spells
     public class SpellBook
     {
         public event Action<ISpell> OnSpellSelected;
+
+        public List<ISpell> KnownSpells { get; }
+        public ISpell SelectedSpell { get; private set; }
         
-        private List<ISpell> _knownSpells;
-
         private int _selectedIndex;
-        private ISpell _selectedSpell;
-
-        public ISpell SelectedSpell => _selectedSpell;
-
-        public List<ISpell> KnownSpells => _knownSpells;
 
         public SpellBook(List<ISpell> knownSpells)
         {
-            _knownSpells = knownSpells;
+            KnownSpells = knownSpells;
             _selectedIndex = 0;
-            _selectedSpell = _knownSpells.FirstOrDefault();
+            SelectedSpell = KnownSpells.FirstOrDefault();
         }
 
         public void SelectNext()
         {
-            _selectedIndex = (_selectedIndex + 1) % _knownSpells.Count;
-            _selectedSpell = _knownSpells[_selectedIndex];
+            _selectedIndex = (_selectedIndex + 1) % KnownSpells.Count;
+            SelectedSpell = KnownSpells[_selectedIndex];
             
-            OnSpellSelected?.Invoke(_selectedSpell);
+            OnSpellSelected?.Invoke(SelectedSpell);
         }
 
         public void SelectPrevious()
         {
-            _selectedIndex = (_selectedIndex - 1 + _knownSpells.Count) % _knownSpells.Count;
-            _selectedSpell = _knownSpells[_selectedIndex];
-            OnSpellSelected?.Invoke(_selectedSpell);
+            _selectedIndex = (_selectedIndex - 1 + KnownSpells.Count) % KnownSpells.Count;
+            SelectedSpell = KnownSpells[_selectedIndex];
+            OnSpellSelected?.Invoke(SelectedSpell);
         }
     }
 }

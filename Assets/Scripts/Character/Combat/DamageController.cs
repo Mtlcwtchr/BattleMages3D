@@ -1,25 +1,19 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Character.Combat
 {
     public class DamageController : MonoBehaviour
     {
-        public event Action OnDamageDealt;
-        
         [SerializeField] private float damage;
         
         public float Damage { get; set; }
         
-        public bool AwaitDamage { 
-            get; 
-            set; }
+        public bool AwaitDamage { get; set; }
 
         private void Awake()
         {
             Damage = damage;
         }
-        
         
         private void OnTriggerEnter(Collider other)
         {
@@ -30,7 +24,6 @@ namespace Character.Combat
             {
                 AwaitDamage = false;
                 damageable.Damage(Damage);
-                OnDamageDealt?.Invoke();
             }
         }
     }

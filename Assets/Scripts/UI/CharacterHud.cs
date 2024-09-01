@@ -1,4 +1,4 @@
-﻿using Character.Entity;
+﻿using Character;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,25 +12,25 @@ namespace UI
         [SerializeField] private TMP_Text hpText;
         [SerializeField] private TMP_Text armor;
 
-        private Character.CharacterController _character;
+        private CharacterModel _character;
         
-        public void Init(Character.CharacterController character)
+        public void Init(CharacterModel character)
         {
             _character = character;
-
-            icon.sprite = character.Entity.Config.icon;
-            armor.text = character.Entity.Armor.ToString(".#");
-            CharacterHpChanged(character.Entity.Hp);
-            character.OnHpChanged += CharacterHpChanged;
+            icon.sprite = character.Data.Config.icon;
+            armor.text = character.Data.Armor.ToString(".#");
             
+            CharacterHpChanged(character.Data.Hp);
+            
+            character.OnHpChanged += CharacterHpChanged;
         }
 
-        private string GetHpText(Entity entity) => $"{entity.Hp}/{entity.MaxHp}";
+        private string GetHpText(CharacterData entity) => $"{entity.Hp}/{entity.MaxHp}";
 
         private void CharacterHpChanged(float hp)
         {
-            hpBar.value = hp / _character.Entity.MaxHp;
-            hpText.text = GetHpText(_character.Entity);
+            hpBar.value = hp / _character.Data.MaxHp;
+            hpText.text = GetHpText(_character.Data);
         }
     }
 }

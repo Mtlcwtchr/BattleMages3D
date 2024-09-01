@@ -14,7 +14,7 @@ namespace Character.Animation
         [SerializeField] private Animator animator;
         [SerializeField] private CharacterController character;
         
-        private AttackAnimationBehaviour _attackBehaviour;
+        private IBehaviour _attackBehaviour;
         private Action _attackStart;
         private Action _attackFinish;
 
@@ -41,8 +41,8 @@ namespace Character.Animation
 
         private void FixedUpdate()
         {
-            var input = character.InputNormalized;
-            var speed = character.SpeedNormalized;
+            var input = character.Model.AbsoluteDirection;
+            var speed = character.Model.SpeedNormalized;
             animator.SetFloat(SpeedParam, speed);
             if (_lastInput != input)
             {
@@ -54,19 +54,16 @@ namespace Character.Animation
 
         private void AttackEnter()
         {
-            Debug.Log("Attack enter");
             _attackStart?.Invoke();
         }
 
         private void AttackEnd()
         {
-            Debug.Log("Attack end");
             _attackFinish?.Invoke();
         }
 
         public void Attack()
         {
-            Debug.Log("Attack request");
             animator.SetTrigger(AttackParam);
         }
     }

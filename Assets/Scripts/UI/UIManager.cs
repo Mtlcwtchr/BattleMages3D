@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using CharacterController = Character.CharacterController;
+﻿using Character;
+using UnityEngine;
 
 namespace UI
 {
@@ -9,16 +9,16 @@ namespace UI
         [SerializeField] private CharacterPanel characterPanel;
         [SerializeField] private GameObject endgameElement;
 
-        private CharacterController _character;
+        private CharacterModel _character;
 
-        public void SetContent(CharacterController character)
+        public void SetContent(CharacterModel character)
         {
             _character = character;
 
-            spellsPanel.SetData(character.Entity.SpellBook);
+            spellsPanel.SetData(character.SpellBook);
             characterPanel.SetContent(character);
             
-            _character.OnDead += CharacterDead;
+            _character.OnCharacterDied += CharacterDead;
         }
 
         private void CharacterDead()

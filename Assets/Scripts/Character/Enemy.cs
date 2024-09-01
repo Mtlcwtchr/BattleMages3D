@@ -9,22 +9,21 @@ namespace Character
         public event Action<Enemy> OnFreed;
         
         [SerializeField] private AICharacterController controller;
-
-        public void Init()
+        [SerializeField] private CharacterConfig config;
+        
+        private CharacterModel _model;
+        
+        public void Init(CharacterModel model)
         {
-            controller.Init();
-        }
-
-        public override void Get()
-        {
-            controller.OnDead += Dead;
+            _model = model;
+            _model.OnCharacterDied += Dead;
             
-            base.Get();
+            controller.Init(_model);
         }
 
         public override void Free()
         {
-            controller.OnDead -= Dead;
+            _model.OnCharacterDied -= Dead;
             OnFreed?.Invoke(this);
             
             base.Free();
@@ -35,7 +34,7 @@ namespace Character
             Free(this);
         }
 
-        public void SetTarget(CharacterController target)
+        public void SetTarget(CharacterModel target)
         {
             controller.SetTarget(target);
         }

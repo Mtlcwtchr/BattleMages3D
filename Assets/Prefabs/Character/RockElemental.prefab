@@ -190,6 +190,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 3
   controller: {fileID: 4791028521626412602}
+  config: {fileID: 11400000, guid: 34d0d3a7f8054aa41801452861a13cb3, type: 2}
 --- !u!114 &4791028521626412602
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -203,12 +204,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementController: {fileID: 1382684702315992283}
-  animationController: {fileID: 2199797582857325219}
   attackStrategy: {fileID: 6127648685379566675}
   rotationController: {fileID: 1052498939135916209}
-  entityConfig: {fileID: 11400000, guid: 34d0d3a7f8054aa41801452861a13cb3, type: 2}
-  spellCastRoot: {fileID: 0}
   hud: {fileID: 8376281657867796010}
+  spellCastRoot: {fileID: 0}
   agent: {fileID: 7133550216257227912}
 --- !u!114 &1382684702315992283
 MonoBehaviour:
@@ -222,12 +221,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 262e1b20dcb641ccbe72a49f695af63e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 2
-  strafeSpeed: 1.5
+  strafeFactor: 0.7
   movementSmoothTime: 1
   stopSmoothTime: 0.25
-  rb: {fileID: 8759977139288704010}
   maxMoveAngle: 0
+  rb: {fileID: 8759977139288704010}
 --- !u!114 &2199797582857325219
 MonoBehaviour:
   m_ObjectHideFlags: 0

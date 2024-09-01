@@ -3,20 +3,18 @@ using Character;
 using Pooling;
 using UnityEngine;
 using Utilities;
-using CharacterController = Character.CharacterController;
 
 namespace SceneManagement
 {
     public class EnemySpawnController : MonoBehaviour
     {
-        [SerializeField] private List<Enemy> enemies;
+        [SerializeField] private List<CharacterConfig> enemies;
         [SerializeField] private List<Transform> spawnPoints;
         [SerializeField] private int maxEnemies;
         [SerializeField] private float spawnCooldown;
 
+        private CharacterModel _target;
         private HashSet<Enemy> _enemiesOnScene;
-
-        private CharacterController _target;
 
         private float _nextSpawnTime;
 
@@ -36,7 +34,7 @@ namespace SceneManagement
             }
         }
         
-        public void SetTarget(CharacterController player)
+        public void SetTarget(CharacterModel player)
         {
             _target = player;
         }
@@ -47,13 +45,17 @@ namespace SceneManagement
                 return;
 
             _nextSpawnTime = Time.time + spawnCooldown;
+            
             var enemy = enemies.RandomElement();
             var spawn = spawnPoints.RandomElement();
 
-            var enemyInstance = PooledBehaviour.Get<Enemy>(enemy.Type);
-            enemyInstance.Init();
-            enemyInstance.transform.position = spawn.position;
+            var enemyInstance = PooledBehaviour.Get<Enemy>(enemy.type);
+            var model = new CharacterModel(enemy);
+            
+            enemyInstance.Init(model);
+            enemyInstance.transform.SetPositionAndRotation(spawn.position, spawn.rotation);
             enemyInstance.SetTarget(_target);
+            
             _enemiesOnScene.Add(enemyInstance);
             
             enemyInstance.OnFreed += EnemyFreed;

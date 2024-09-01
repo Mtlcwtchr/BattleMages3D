@@ -185,11 +185,23 @@ PrefabInstance:
       propertyPath: attackStrategy
       value: 
       objectReference: {fileID: 8417204747346095253}
+    - target: {fileID: 3297256149469944969, guid: 9ee7a79db4671374db38ad1eb5de1858,
+        type: 3}
+      propertyPath: characterConfig
+      value: 
+      objectReference: {fileID: 11400000, guid: 5f96d366d2a43fb4cbfb062cd6640aa7,
+        type: 2}
     - target: {fileID: 5550466165634821355, guid: 9ee7a79db4671374db38ad1eb5de1858,
         type: 3}
       propertyPath: type
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 5550466165634821355, guid: 9ee7a79db4671374db38ad1eb5de1858,
+        type: 3}
+      propertyPath: config
+      value: 
+      objectReference: {fileID: 11400000, guid: 5f96d366d2a43fb4cbfb062cd6640aa7,
+        type: 2}
     - target: {fileID: 8158362873389068304, guid: 9ee7a79db4671374db38ad1eb5de1858,
         type: 3}
       propertyPath: animator

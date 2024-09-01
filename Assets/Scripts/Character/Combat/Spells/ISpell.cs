@@ -6,7 +6,7 @@ namespace Character.Combat.Spells
     {
         public SpellConfig Config { get; }
         
-        public void BeginCast(CharacterController caster);
-        public void EndCast(CharacterController caster);
+        public void BeginCast(CharacterModel caster);
+        public void EndCast(CharacterModel caster);
     }
 }

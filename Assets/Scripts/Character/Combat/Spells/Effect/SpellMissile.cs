@@ -11,12 +11,12 @@ namespace Character.Combat.Spells.Effect
         [SerializeField] private MovementController movementController;
         [SerializeField] private RotationController rotationController;
         [SerializeField] private DamageController damageController;
-
-        private Vector3 _dir;
         
         public float LifeTimeMax { get; set; }
 
         private float _lifeTime;
+
+        private Vector3 _dir;
 
         private bool _fired;
 

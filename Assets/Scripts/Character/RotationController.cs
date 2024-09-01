@@ -6,14 +6,14 @@ namespace Character
     {
         [SerializeField] private float rotationSpeed;
 
-        protected Quaternion _desiredQuat;
+        private Quaternion _desiredQuat;
 
         public void SetDesiredRotation(Quaternion desiredRotation)
         {
             _desiredQuat = desiredRotation;
         }
         
-        protected virtual void FixedUpdate()
+        private void FixedUpdate()
         {
             transform.rotation = Quaternion.Lerp(transform.rotation, _desiredQuat, Time.fixedDeltaTime * rotationSpeed);
         }

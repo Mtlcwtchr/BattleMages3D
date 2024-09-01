@@ -6,55 +6,51 @@ namespace Character
 {
     public class AICharacterController : CharacterController
     {
-        [SerializeField] private NavMeshAgent agent;
-
         private const float RecalculatePathThreshold = 1.44f;
-
+        
+        [SerializeField] private NavMeshAgent agent;
+        
+        private CharacterModel _target;
         private NavMeshPath _path;
+        
+        private readonly Vector3[] _corners = new Vector3[256];
+        private Vector3 _lastPos;
+        private Vector3 _movementVector;
+        private Quaternion _desiredRotation;
+        
+        private bool _rotationMatch;
         private bool _canMove;
-        private Vector3[] _corners = new Vector3[256];
+        
         private int _cornersCount;
         private int _currentCorner;
+        
+        private Vector3 TargetDir => _target.Position - Model.Position;
         private int NextCorner => _currentCorner + 1;
-
         private bool PathFinished => NextCorner >= _cornersCount;
-
-        private Vector3 _lastPos;
         
-        private CharacterController _target;
-
-        private Vector3 _movementVector;
-
-        private Vector3 TargetDir => _target.Position - Position;
-
-        private Vector2 InputVector => transform.InverseTransformVector(_movementVector).Convert();
-
-        private Quaternion _desiredRotation;
-        private Quaternion Rotation => transform.rotation;
-
-        private bool _rotationMatch;
-
-        public void SetTarget(CharacterController target)
-        {
-            _target = target;
-            RecalculatePath();
-        }
-        
-        private void FixedUpdate()
+        protected override void FixedUpdate()
         {
             if (_target == null || !_target.IsVisible)
                 return;
             
             _movementVector = UpdateMovement();
-            movementController.AddMovementInput(_movementVector, InputVector);
+            movementController.AddMovementInput(_movementVector, _movementVector.Convert());
 
             _rotationMatch = UpdateRotation();
             UpdateAttack();
+            
+            base.FixedUpdate();
+        }
+
+        public void SetTarget(CharacterModel target)
+        {
+            _target = target;
+            RecalculatePath();
         }
 
         private void UpdateAttack()
         {
-            if (attackStrategy.InAttackRange(Position, _target.Position) && _rotationMatch)
+            if (attackStrategy.InAttackRange(Model.Position, _target.Position) && _rotationMatch)
             {
                 AttackRequested();
             }
@@ -63,16 +59,16 @@ namespace Character
         private bool UpdateRotation()
         {
             _desiredRotation = Quaternion.LookRotation(TargetDir, Vector3.up);
-            if(_desiredRotation != Rotation)
+            if(_desiredRotation != transform.rotation)
             {
                 rotationController.SetDesiredRotation(_desiredRotation);
             }
-            return attackStrategy.InAttackSector(Rotation, _desiredRotation);
+            return attackStrategy.InAttackSector(transform.rotation, _desiredRotation);
         }
 
         private Vector3 UpdateMovement()
         {
-            if (attackStrategy.InAttackRange(Position, _target.Position))
+            if (attackStrategy.InAttackRange(Model.Position, _target.Position))
                 return Vector3.zero;
 
             if (!_canMove)
@@ -81,7 +77,7 @@ namespace Character
                 return Vector3.zero;
             }
 
-            var pos = Position;
+            var pos = Model.Position;
             var delta = pos - _lastPos;
             
             if (delta.sqrMagnitude >= RecalculatePathThreshold || PathFinished)
@@ -123,5 +119,9 @@ namespace Character
             _cornersCount = _path.GetCornersNonAlloc(_corners);
             return AdvancePath();
         }
+
+        protected override void Die() { }
+
+        protected override Vector3 GetAttackTarget() => TargetDir;
     }
 }

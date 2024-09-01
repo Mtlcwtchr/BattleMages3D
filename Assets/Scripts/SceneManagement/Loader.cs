@@ -1,4 +1,6 @@
-﻿using Camera;
+﻿using System;
+using Camera;
+using Character;
 using UI;
 using UnityEngine;
 using CharacterController = Character.CharacterController;
@@ -9,22 +11,23 @@ namespace SceneManagement
     {
         [SerializeField] private FollowUpCamera followUpCamera;
         [SerializeField] private CharacterController character;
+        [SerializeField] private CharacterConfig playerConfig;
         [SerializeField] private EnemySpawnController enemiesController;
-        
         [SerializeField] private UIManager uiManager;
         
-        private void Awake()
+        private void OnEnable()
         {
-            character.OnDead += CharacterDead;
-            character.Init();
+            var playerModel = new CharacterModel(playerConfig);
             
-            followUpCamera.SetFollowingObject(character);
-            enemiesController.SetTarget(character);
-
-            uiManager.SetContent(character);
+            character.Init(playerModel);
+            followUpCamera.SetFollowingObject(playerModel);
+            enemiesController.SetTarget(playerModel);
+            uiManager.SetContent(playerModel);
+            
+            playerModel.OnCharacterDied += CharacterDied;
         }
 
-        private void CharacterDead()
+        private void CharacterDied()
         {
             Time.timeScale = 0.01f;
         }

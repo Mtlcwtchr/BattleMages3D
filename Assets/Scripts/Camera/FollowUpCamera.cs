@@ -1,7 +1,6 @@
 ﻿using Character;
 using UnityEngine;
 using Utilities;
-using CharacterController = Character.CharacterController;
 
 namespace Camera
 {
@@ -9,9 +8,10 @@ namespace Camera
     {
         [SerializeField] private MovementController movementController;
         [SerializeField] private Vector3 offset;
+        [SerializeField] private float speed;
         [SerializeField] private float threshold;
 
-        private CharacterController _followUpObject;
+        private CharacterModel _followUpObject;
         
         private Vector2 _desiredPosition;
 
@@ -25,9 +25,10 @@ namespace Camera
             }
 
             _thresholdSq = threshold * threshold;
+            movementController.SetSpeed(speed);
         }
 
-        public void SetFollowingObject(CharacterController followObject)
+        public void SetFollowingObject(CharacterModel followObject)
         {
             _followUpObject = followObject;
         }

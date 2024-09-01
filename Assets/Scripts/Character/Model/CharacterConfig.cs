@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using Character.Combat.Spells.Config;
+using Pooling;
 using UnityEngine;
 
-namespace Character.Entity
+namespace Character
 {
-    [CreateAssetMenu(fileName = "EntityConfig", menuName = "BattleMages/EntityConfig", order = 0)]
-    public class EntityConfig : ScriptableObject
+    [CreateAssetMenu(fileName = "CharacterConfig", menuName = "BattleMages/CharacterConfig", order = 0)]
+    public class CharacterConfig : ScriptableObject
     {
+        public EPool type;
         public Sprite icon;
         public float maxHp;
         public float armor;

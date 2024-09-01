@@ -18,22 +18,20 @@ namespace Character.Combat.Spells
             _config = config as FireballConfig;
         }
         
-        public void BeginCast(CharacterController caster)
+        public void BeginCast(CharacterModel caster)
         {
-            Debug.Log("Begin cast");
             _missile = PooledBehaviour.Get<SpellMissile>(_config.missile.Type);
-            _missile.transform.SetParent(caster.SpellCastRoot, false);
+            _missile.transform.SetParent(caster.View.RootsData.MissileCastRoot, false);
             _missile.LifeTimeMax = _config.maxLifeTime;
             _missile.OnDestroyed += MissileDestroyed;
         }
 
-        public void EndCast(CharacterController caster)
+        public void EndCast(CharacterModel caster)
         {
-            Debug.Log("End cast");
             if (_missile == null)
                 return;
 
-            _missile.Fire(caster.AttackDir, _config.speed, _config.damage);
+            _missile.Fire(caster.AttackDirection, _config.speed, _config.damage);
             _missile = null;
         }
 

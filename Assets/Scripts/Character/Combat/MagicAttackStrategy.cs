@@ -5,24 +5,27 @@ namespace Character.Combat
     public class MagicAttackStrategy : AttackStrategy
     {
         private SpellBook _spellBook;
-        
-        public ISpell CurrentSpell { get; set; }
+
+        private ISpell _currentSpell;
 
         private ISpell _selectedSpell;
-        
-        private bool _attackInProgress;
 
-        public void SetupSpellBook(SpellBook spellBook)
+        protected override void InitInternal(CharacterModel model)
+        {
+             SetupSpellBook(model.SpellBook);
+        }
+
+        private void SetupSpellBook(SpellBook spellBook)
         {
             _spellBook = spellBook;
-            CurrentSpell = _spellBook.SelectedSpell;
+            _currentSpell = _spellBook.SelectedSpell;
             
             spellBook.OnSpellSelected += SpellSelected;
 
             void SpellSelected(ISpell spell)
             {
                 _selectedSpell = spell;
-                if(!_attackInProgress)
+                if(!AttackInProgress)
                 {
                     UpdateCurrentSpell();
                 }
@@ -31,30 +34,30 @@ namespace Character.Combat
 
         private void UpdateCurrentSpell()
         {
-            if (_selectedSpell != null)
-            {
-                CurrentSpell = _selectedSpell;
-                _selectedSpell = null;
-            }
+            if (_selectedSpell == null)
+                return;
+            
+            _currentSpell = _selectedSpell;
+            _selectedSpell = null;
         }
         
         protected override void AttackFinish()
         {
-            _attackInProgress = false;
-            CurrentSpell.EndCast(character);
+            base.AttackFinish();
+            _currentSpell.EndCast(character.Model);
             
             UpdateCurrentSpell();
         }
 
         protected override void AttackStart()
         {
-            _attackInProgress = true;
-            CurrentSpell.BeginCast(character);
+            base.AttackStart();
+            _currentSpell.BeginCast(character.Model);
         }
 
         protected override bool CanAttack()
         {
-            return !_attackInProgress && CurrentSpell != null;
+            return base.CanAttack() && _currentSpell != null;
         }
     }
 }

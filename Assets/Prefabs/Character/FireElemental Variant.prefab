@@ -193,6 +193,12 @@ PrefabInstance:
       propertyPath: type
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 2501789587917149784, guid: 59b8eff641cdae640a057e3c4e544594,
+        type: 3}
+      propertyPath: config
+      value: 
+      objectReference: {fileID: 11400000, guid: 5ae7bb92288a6cc4a8f4a91eea385d9d,
+        type: 2}
     - target: {fileID: 4791028521626412602, guid: 59b8eff641cdae640a057e3c4e544594,
         type: 3}
       propertyPath: entityConfig
@@ -204,6 +210,12 @@ PrefabInstance:
       propertyPath: spellCastRoot
       value: 
       objectReference: {fileID: 2308647100329736299}
+    - target: {fileID: 4791028521626412602, guid: 59b8eff641cdae640a057e3c4e544594,
+        type: 3}
+      propertyPath: characterConfig
+      value: 
+      objectReference: {fileID: 11400000, guid: 5ae7bb92288a6cc4a8f4a91eea385d9d,
+        type: 2}
     - target: {fileID: 4941682044723943845, guid: 59b8eff641cdae640a057e3c4e544594,
         type: 3}
       propertyPath: m_LocalPosition.x

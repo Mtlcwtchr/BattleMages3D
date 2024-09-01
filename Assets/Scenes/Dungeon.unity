@@ -509,9 +509,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemies:
-  - {fileID: 2501789587917149784, guid: 59b8eff641cdae640a057e3c4e544594, type: 3}
-  - {fileID: 5550466165634821355, guid: 9ee7a79db4671374db38ad1eb5de1858, type: 3}
-  - {fileID: 4515759061180248851, guid: 0a5613f4c631f4548a9a9644683597da, type: 3}
+  - {fileID: 11400000, guid: 34d0d3a7f8054aa41801452861a13cb3, type: 2}
+  - {fileID: 11400000, guid: 5ae7bb92288a6cc4a8f4a91eea385d9d, type: 2}
+  - {fileID: 11400000, guid: 5f96d366d2a43fb4cbfb062cd6640aa7, type: 2}
   spawnPoints:
   - {fileID: 405798603}
   - {fileID: 785724754}
@@ -762,12 +762,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 262e1b20dcb641ccbe72a49f695af63e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 4
-  strafeSpeed: 4
+  strafeFactor: 1
   movementSmoothTime: 0.3
   stopSmoothTime: 0.1
-  rb: {fileID: 0}
   maxMoveAngle: 0
+  rb: {fileID: 0}
 --- !u!114 &1223153705
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -782,6 +781,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementController: {fileID: 1223153704}
   offset: {x: 0, y: 0, z: 0}
+  speed: 5
   threshold: 0.25
 --- !u!114 &1223153706
 MonoBehaviour:
@@ -1463,6 +1463,12 @@ PrefabInstance:
       propertyPath: uiManager
       value: 
       objectReference: {fileID: 2322568027877289810}
+    - target: {fileID: 2336310418760833843, guid: 487f4c6cc69588b468edf966a07cbae1,
+        type: 3}
+      propertyPath: playerConfig
+      value: 
+      objectReference: {fileID: 11400000, guid: ba1eee9793e227d498cbb88c087b358c,
+        type: 2}
     - target: {fileID: 2336310418760833843, guid: 487f4c6cc69588b468edf966a07cbae1,
         type: 3}
       propertyPath: followUpCamera

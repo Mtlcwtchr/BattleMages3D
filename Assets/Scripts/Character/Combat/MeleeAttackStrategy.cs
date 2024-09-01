@@ -5,30 +5,24 @@ namespace Character.Combat
     public class MeleeAttackStrategy : AttackStrategy
     {
         [SerializeField] private DamageController damageController;
-        
-        private bool _attackInProgress;
-        
-        public float Damage
+
+        protected override void InitInternal(CharacterModel model)
         {
-            get => damageController.Damage;
-            set => damageController.Damage = value;
+            damageController.Damage = model.Data.Config.attackDamage;
         }
-        
+
         protected override void AttackFinish()
         {
-            _attackInProgress = false;
+            base.AttackFinish();
+            
             damageController.AwaitDamage = false;
         }
 
         protected override void AttackStart()
         {
-            _attackInProgress = true;
+            base.AttackStart();
+            
             damageController.AwaitDamage = true;
-        }
-
-        protected override bool CanAttack()
-        {
-            return !_attackInProgress;
         }
     }
 }

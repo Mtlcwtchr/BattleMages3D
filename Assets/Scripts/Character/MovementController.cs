@@ -5,48 +5,36 @@ namespace Character
 {
     public class MovementController : MonoBehaviour
     {
-        [SerializeField] private float movementSpeed;
-        [SerializeField] private float strafeSpeed;
+        [SerializeField] private float strafeFactor;
         [SerializeField] private float movementSmoothTime;
         [SerializeField] private float stopSmoothTime;
-        [SerializeField] private Rigidbody rb;
         [SerializeField] private float maxMoveAngle;
+        [SerializeField] private Rigidbody rb;
+        
+        private Vector2 _requestedInput;
+        private Vector3 _movementInput;
+        private Vector3 _lastMoveVector;
         
         private float _speed;
         private float _strafeSpeed;
+        private float _currentSpeed;
+        private float _movementRequestTime;
+        private float _stopTime;
         
-        private Vector3 _position;
-        
-        public Vector3 Position => _position;
-
-        public Vector2 ConsumedInput => _consumedInput;
-        
-        public float SpeedNormalized => _currentSpeed / MovementSpeed;
+        private bool _inputConsumed;
+        private bool _idle;
+        private bool _strafe;
 
         private float MovementSpeed => _strafe ? _strafeSpeed : _speed;
         
-        private bool _inputConsumed;
+        public float SpeedNormalized => _currentSpeed / MovementSpeed;
 
-        private Vector2 _requestedInput;
-        private Vector2 _consumedInput;
-        private Vector3 _movementInput;
-
-        private float _currentSpeed;
-        private float _movementRequestTime;
-
-        private float _stopTime;
-
-        private Vector3 _lastMoveVector;
-
-        private bool _idle;
-
-        private bool _strafe;
+        public Vector2 ConsumedInput { get; private set; }
 
         public void SetSpeed(float speed)
         {
-            var delta = strafeSpeed / movementSpeed;
-            movementSpeed = speed;
-            strafeSpeed = speed * delta;
+            _speed = speed;
+            _strafeSpeed = speed * strafeFactor;
         }
 
         public void AddMovementInput(Vector3 movementRequest, Vector2 inputVector)
@@ -57,20 +45,12 @@ namespace Character
             _inputConsumed = false;
         }
 
-
-        private void Awake()
-        {
-            _position = transform.position;
-            _speed = movementSpeed;
-            _strafeSpeed = strafeSpeed;
-        }
-
         private void FixedUpdate()
         {
             var dir = ConsumeMovementInput();
             
             if (dir == Vector3.zero ||
-                ( !_idle && _consumedInput.Opposite(_requestedInput)))
+                ( !_idle && ConsumedInput.Opposite(_requestedInput)))
             {
                 UpdateIdle();
                 return;
@@ -98,13 +78,14 @@ namespace Character
                 _currentSpeed = 0f;
                 _movementRequestTime = 0;
                 _lastMoveVector = Vector3.zero;
+                ConsumedInput = Vector2.zero;
                 _idle = true;
             }
         }
 
         private void UpdateMovement(Vector3 dir)
         {
-            _consumedInput = _requestedInput;
+            ConsumedInput = _requestedInput;
             _idle = false;
             _stopTime = 0f;
             _movementRequestTime += Time.fixedDeltaTime;
@@ -127,7 +108,6 @@ namespace Character
                 return;
             
             transform.position += velocity;
-            _position = transform.position;
         }
 
         private Vector3 ConsumeMovementInput()

@@ -7,15 +7,14 @@ namespace Pooling
     {
         [SerializeField] private EPool poolType;
         [SerializeField] private GameObject template;
-
+        [Header("Capacity")]
         [SerializeField] private int initCapacity;
         [SerializeField] private int capacityIncrease;
-
         [SerializeField] private int maxCapacity;
 
         public EPool PoolType => poolType;
 
-        private int currentCapacity;
+        private int _currentCapacity;
         
         private Stack<GameObject> _cachedObjects;
         private HashSet<GameObject> _busyObjects;
@@ -31,13 +30,13 @@ namespace Pooling
         {
             for (int i = 0; i < count; ++i)
             {
-                if (currentCapacity >= maxCapacity)
+                if (_currentCapacity >= maxCapacity)
                     return;
                 
                 var go = Instantiate(template, transform);
                 go.SetActive(false);
                 _cachedObjects.Push(go);
-                currentCapacity++;
+                _currentCapacity++;
             }
         }
 
